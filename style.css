@@ -1,0 +1,33 @@
+body{
+    display:flex;
+    justify-content: center;
+    text-align: center;
+}
+
+#game-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.game-cell{
+    font-size: x-large;
+    padding: 8px;
+    min-height: 2rem;
+    min-width: 2rem;
+    border-color:gray;
+    border-style:solid;
+    border-width: 2px;
+}
+
+.game-cell:hover{
+    background-color: antiquewhite;
+}
+
+.reset{
+    padding: 32px;
+}
+
+.select-symbol{
+    padding-top: 16px;
+}
