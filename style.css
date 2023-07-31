@@ -31,3 +31,7 @@ body{
 .select-symbol{
     padding-top: 16px;
 }
+
+#winner{
+    font-size: xx-large;
+}
