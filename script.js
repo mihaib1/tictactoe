@@ -29,7 +29,7 @@ const game = (() => {
                     case "Y": Ys += 1;
                         break;
                     default: break;
-                }
+                } 
             }
         }
         if(Xs == 3){
@@ -43,9 +43,8 @@ const game = (() => {
     checkColumn = function(colNum){
         var Xs = 0;
         var Ys = 0;
-        console.log(`We are on column ${colNum}`);
         const gameCells = document.querySelectorAll(".game-cell");
-        for(let i = 0; i < gameCells.length; i ++) {
+        for(let i = 0; i < gameCells.length; i++) {
             if(gameCells[i].getAttribute("cellcol") == colNum) {
                 switch(gameCells[i].getAttribute("symbol")){
                     case "X": Xs += 1;
@@ -64,10 +63,60 @@ const game = (() => {
         };
     };
 
+    checkMainDiagonal = function() {
+        var Xs = 0;
+        var Ys = 0;
+        const gameCells = document.querySelectorAll(".game-cell");
+        for(let i = 0; i< gameCells.length; i++){
+            if(gameCells[i].getAttribute("cellcol") == gameCells[i].getAttribute("cellrow")) {
+                switch(gameCells[i].getAttribute("symbol")){
+                    case "X": Xs += 1;
+                        break;
+                    case "Y": Ys += 1;
+                        break;
+                    default: break;
+                }
+            }
+        }
+        if(Xs == 3){
+            displayWinner("X");
+        };
+        if(Ys == 3){
+            displayWinner("Y");
+        };
+    }
+
+    checkSecondaryDiagonal = function() {
+        var Xs = 0;
+        var Ys = 0;
+        const gameCells = document.querySelectorAll(".game-cell");
+        for(let i=0; i < gameCells.length; i++){
+            for(let j = 0; j <= 2; j++){
+                if(gameCells[i].getAttribute("cellrow") == 2 - j && gameCells[i].getAttribute("cellcol") == 0 + j){
+                    switch(gameCells[i].getAttribute("symbol")){
+                        case "X": Xs += 1;
+                            break;
+                        case "Y": Ys += 1;
+                            break;
+                        default: break;
+                    }
+                }
+            }
+        }
+        if(Xs == 3){
+            displayWinner("X");
+        };
+        if(Ys == 3){
+            displayWinner("Y");
+        };
+    };
+
     function checkWin(){
         for(let i =0; i<3; i++){
             checkLine(i);
             checkColumn(i);
+            checkMainDiagonal();
+            checkSecondaryDiagonal();
         };
     };
 
@@ -141,17 +190,10 @@ testBtn.addEventListener("click", function(e){});
 
 // pot face un loc unde va aparea o eroare de cate ori utilizatorul incearca sa faca o miscare interzisa.
 
-// cazuri castigatoare: acelasi rand, aceeasi coloana, diagonala principala (colIndex = rowIndex) si diagonala secundara (c0-r2, c1-r1, c2-r0)
-
 // Comentarii modul game()
         // putem face 2 butoane care sa seteze simbolul - facut butoane, trebuie pusa actiunea pe ele
         // putem face un script care va alege random ce simbol va primi utilizatorul
         // putem seta simbolul in functie de dificultate (aici va fi nevoie de 3 butoane - Easy, Medium si Hard), iar in functie de dificultate alegem butonul
         // momentan o sa-l las pe X pentru testare;
-
-var array = ["x", "x", "y"].reduce((count, value) => 
-(value == "x" ? count + 1 : count), 0);
-
-//console.log("Element X appears " + array + " times");
 
 
