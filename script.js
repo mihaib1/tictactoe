@@ -187,6 +187,10 @@ testBtn = document.getElementById("test");
 testBtn.addEventListener("click", function(e){});
 
 
+// de aranjat pagina, de adaugat buton de start game dupa ce a introdus numele
+// de adaugat optiune de ales intre player 1 si player 2
+// eventual de facut un AI care sa faca o miscare legala random
+
 
 // pot face un loc unde va aparea o eroare de cate ori utilizatorul incearca sa faca o miscare interzisa.
 
