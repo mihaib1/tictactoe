@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +8,11 @@
     <script src="script.js" defer></script>
     <title>Tic-Tac-Toe</title>
 </head>
+
 <body>
     <div class="game-container">
-        <div class="player-name">
-            <label for="playerName">Your Name:</label>
-            <input type="text" name="playerName">
-        </div>
-        <div class="select-symbol">
-            <button class="symbolBtn">X</button>
-            <button class="symbolBtn">Y</button>
+        <div class="page-header">
+            <h1>Tic-Tac-Toe</h1>
         </div>
         <div class="scoreboard">
             <h3>Score: </h3>
@@ -29,9 +26,37 @@
             <button id="gameResetBtn">Reset Game!</button>
             <button id="test">test</button>
         </div>
-        <div id="winner">
-            
+        <div id="winner"></div>
+    </div>
+
+    <!-- Trigger/Open The Modal -->
+    <button id="myBtn">Open Modal</button>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2>Choose your symbol!</h2>
+            </div>
+            <div class="modal-body">
+                <p>Please choose your preffered symbol:</p>
+                <p>
+                <div class="symbolChoice">
+                    <button class="symbolBtn" symbol="X">X</button>
+                    <button class="symbolBtn" symbol="Y">Y</button>
+                </div>
+                </p>
+                <p>
+                <div class="playerChoice"></div>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <h4>The Odin Project - Mihai Băiașu</h4>
+            </div>
         </div>
     </div>
 </body>
+
 </html>
