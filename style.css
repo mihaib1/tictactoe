@@ -138,7 +138,7 @@ h1{
     to {top: 0; opacity: 1}
   }
 
-  .blueBtn{
+  .symbolBtn, .blueBtn{
     padding: 1rem;
     margin: 1rem;
     color:white;
@@ -147,11 +147,15 @@ h1{
     border-radius:4px;
   }
 
-  .blueBtn:hover{
+  .symbolBtn:hover, .blueBtn:hover{
     background-color: #076182;
     transition-duration: 0.15s;
   }
   
   .selected{
     background-color: #076182;
+  }
+
+  .hidden{
+    display:none;
   }

@@ -219,17 +219,25 @@ window.onclick = function(event) {
   }
 }
 
+let player = {
+    name: "",
+    symbol: "",
+}
 
 var symbolButtons = document.querySelectorAll('[class="symbolBtn"]');
 symbolButtons.forEach(function(button){
     button.onclick = function(e){
-        console.log(e.srcElement.getAttribute("symbol"));
         playerSelection = document.getElementsByClassName("selected");
         if(playerSelection.length > 0){
             playerSelection[0].classList.remove("selected");
         }
         e.srcElement.classList.add("selected");
         playerChoiceDiv = document.getElementById("playerChoice");
+        let confirmBtn = document.getElementsByClassName("confirm")[0];
+        confirmBtn.classList.remove("hidden");
+        confirmBtn.onclick = function(event){
+            player.symbol = e.srcElement.getAttribute("symbol");
+        }
         playerChoiceDiv.textContent = "Your symbol of choice is: " + e.srcElement.getAttribute("symbol");
         // set player1 symbol to the clicked element -> show "confirm" button
         // add class "selected" which changes the color of the button
