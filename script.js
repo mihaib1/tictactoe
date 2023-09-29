@@ -194,7 +194,7 @@ testBtn.addEventListener("click", function(e){});
 
 /// MODAL Functions
 // Get the modal
-var modal = document.getElementById("myModal");
+var modal = document.getElementById("startModal");
 
 // Get the button that opens the modal -- to be removed
 var btn = document.getElementById("myBtn");
@@ -229,6 +229,8 @@ symbolButtons.forEach(function(button){
             playerSelection[0].classList.remove("selected");
         }
         e.srcElement.classList.add("selected");
+        playerChoiceDiv = document.getElementById("playerChoice");
+        playerChoiceDiv.textContent = "Your symbol of choice is: " + e.srcElement.getAttribute("symbol");
         // set player1 symbol to the clicked element -> show "confirm" button
         // add class "selected" which changes the color of the button
     }

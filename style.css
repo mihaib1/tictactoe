@@ -1,7 +1,30 @@
 body{
     display:flex;
+    flex-direction: column;
     justify-content: center;
     text-align: center;
+    margin:0;
+    padding:0;
+}
+
+.page-header{
+  background-color: #31a6d1;
+  padding: 0;
+  color: white;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+h1{
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-weight: 400;
+}
+
+.game-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #game-grid{
@@ -64,7 +87,7 @@ body{
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
+    width: 80%;
   }
   
   /* The Close Button */
@@ -115,7 +138,7 @@ body{
     to {top: 0; opacity: 1}
   }
 
-  .symbolBtn{
+  .blueBtn{
     padding: 1rem;
     margin: 1rem;
     color:white;
@@ -124,7 +147,7 @@ body{
     border-radius:4px;
   }
 
-  .symbolBtn:hover{
+  .blueBtn:hover{
     background-color: #076182;
     transition-duration: 0.15s;
   }
