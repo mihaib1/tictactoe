@@ -8,13 +8,21 @@ const game = (() => {
         return userSymbol;
     };
 
-    resetGame = function() {
+    fullReset = function(){ // still buggy
+        //playerController.resetPlayer();
+        clearGameBoard();
+        modal.style.display = "block";
+    }
+
+    clearGameBoard = function() {
         const gameCells = document.querySelectorAll(".game-cell");
+        
         gameCells.forEach(function(item){
             item.removeAttribute("symbol");
             item.textContent = "";
             moveNumber = 0;
         });
+        
     };
 
     checkLine = function(rowNum){
@@ -32,12 +40,7 @@ const game = (() => {
                 } 
             }
         }
-        if(Xs == 3){
-            displayWinner("X");
-        };
-        if(Ys == 3){
-            displayWinner("Y");
-        };
+        getWinningSymbol(Xs, Ys);
     };
 
     checkColumn = function(colNum){
@@ -55,12 +58,7 @@ const game = (() => {
                 }
             }
         }
-        if(Xs == 3){
-            displayWinner("X");
-        };
-        if(Ys == 3){
-            displayWinner("Y");
-        };
+        getWinningSymbol(Xs, Ys);
     };
 
     checkMainDiagonal = function() {
@@ -78,12 +76,7 @@ const game = (() => {
                 }
             }
         }
-        if(Xs == 3){
-            displayWinner("X");
-        };
-        if(Ys == 3){
-            displayWinner("Y");
-        };
+        getWinningSymbol(Xs, Ys);
     }
 
     checkSecondaryDiagonal = function() {
@@ -103,12 +96,7 @@ const game = (() => {
                 }
             }
         }
-        if(Xs == 3){
-            displayWinner("X");
-        };
-        if(Ys == 3){
-            displayWinner("Y");
-        };
+        getWinningSymbol(Xs, Ys);
     };
 
     function checkWin(){
@@ -120,7 +108,7 @@ const game = (() => {
         };
     };
 
-    return {setUserSymbol, resetGame, checkWin};
+    return {setUserSymbol, clearGameBoard, checkWin, fullReset};
 })();
 
 const gameBoard = (() => {
@@ -172,74 +160,101 @@ const displayController = (() => {
     displayWinner = function(winnerSymbol) {
         winnerDiv = document.getElementById("winner");
         winnerDiv.textContent = `Winner is : ${winnerSymbol}`;
-        game.resetGame();
+        game.clearGameBoard();
     }
 
+})();
+
+const playerController = (() => {
+    let player = {
+        name: "",
+        symbol: "",
+        wins:0,
+        losses: 0
+    };
+
+    createPlayerObject = function(symbolTargetDiv) {
+        let symbol = symbolTargetDiv.srcElement.getAttribute("symbol");
+        let confirmBtn = document.getElementsByClassName("confirm")[0];
+        confirmBtn.classList.remove("hidden");
+        confirmBtn.onclick = function(event){
+            player.name = playerInput;
+            player.symbol = symbol;
+            modal.style.display = "none";
+        }
+    }
+
+    resetPlayer = function(){
+        playerController.player = {
+            name: "",
+            symbol: "",
+            wins:0,
+            losses: 0
+        };
+    }
+
+    incrementPlayerWinsAndLosses = function(symbol){
+        if(playerController.player.symbol === symbol){
+            playerController.player.wins += 1;
+        } else {
+            playerController.player.losses += 1;
+        }
+    }
+
+    return {createPlayerObject, player, resetPlayer}
 })();
 
 gameBoard.gameBoardCreator();
 
 resetBtn.addEventListener("click", function(){
-    game.resetGame();
+    game.clearGameBoard();
 });
 
 testBtn = document.getElementById("test");
-testBtn.addEventListener("click", function(e){});
+testBtn.addEventListener("click", function(){
+    game.fullReset();
+});
 
+let playerInput = "";
 
-
+let playerNameInput = document.getElementById("playerName");
+playerNameInput.addEventListener("keyup", function(event){
+    playerInput = event.target.value;
+});
 
 // create a div where an error appears if player makes a forbidden move (timeout so that error disappears on click or after 3s)
 
 
 /// MODAL Functions
-// Get the modal
-var modal = document.getElementById("startModal");
 
-// Get the button that opens the modal -- to be removed
+var modal = document.getElementById("startModal");
 var btn = document.getElementById("myBtn");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks on the button, open the modal
 btn.onclick = function() {
-  modal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-
-let player = {
-    name: "",
-    symbol: "",
+    modal.style.display = "block";
 }
 
 var symbolButtons = document.querySelectorAll('[class="symbolBtn"]');
 symbolButtons.forEach(function(button){
     button.onclick = function(e){
+        let playerChoiceDiv = document.getElementById("playerChoice");
         playerSelection = document.getElementsByClassName("selected");
         if(playerSelection.length > 0){
             playerSelection[0].classList.remove("selected");
         }
         e.srcElement.classList.add("selected");
-        playerChoiceDiv = document.getElementById("playerChoice");
-        let confirmBtn = document.getElementsByClassName("confirm")[0];
-        confirmBtn.classList.remove("hidden");
-        confirmBtn.onclick = function(event){
-            player.symbol = e.srcElement.getAttribute("symbol");
-        }
+        playerController.createPlayerObject(e);
         playerChoiceDiv.textContent = "Your symbol of choice is: " + e.srcElement.getAttribute("symbol");
-        // set player1 symbol to the clicked element -> show "confirm" button
-        // add class "selected" which changes the color of the button
     }
-})
+});
+
+function getWinningSymbol(Xs, Ys){
+    if(Xs == 3){
+        displayWinner("X");
+        incrementPlayerWinsAndLosses("X");
+    };
+    if(Ys == 3){
+        displayWinner("Y");
+        incrementPlayerWinsAndLosses("Y");
+    };
+}
