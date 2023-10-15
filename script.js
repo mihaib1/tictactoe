@@ -25,6 +25,24 @@ const game = (() => {
         
     };
 
+    function getWinningSymbol(Xs, Ys){          // this function needs to be moved
+        if(Xs == 3){
+            displayWinner("X");
+            incrementPlayerWinsAndLosses("X");
+        };
+        if(Ys == 3){
+            displayWinner("Y");
+            incrementPlayerWinsAndLosses("Y");
+        };
+    };
+
+    function tie(){
+        winnerDiv = document.getElementById("winner");
+        winnerDiv.textContent = `Tie!`;
+        game.clearGameBoard();
+    }
+    
+
     checkLine = function(rowNum){
         var Xs = 0;
         var Ys = 0;
@@ -79,6 +97,19 @@ const game = (() => {
         getWinningSymbol(Xs, Ys);
     }
 
+    checkTie = function() {  // checking for ties could be improved. how?
+        let counter = 0;
+        const gameCells = document.querySelectorAll(".game-cell");
+        for(let i = 0; i < gameCells.length; i++){
+            if(gameCells[i].getAttribute("symbol") == "X" || gameCells[i].getAttribute("symbol") == "Y" ){
+                counter += 1;
+            }
+        }
+        if(counter == 9){
+            tie();
+        }
+    }
+
     checkSecondaryDiagonal = function() {
         var Xs = 0;
         var Ys = 0;
@@ -105,6 +136,7 @@ const game = (() => {
             checkColumn(i);
             checkMainDiagonal();
             checkSecondaryDiagonal();
+            checkTie();
         };
     };
 
@@ -148,7 +180,7 @@ const gameBoard = (() => {
             let userSymbol = game.setUserSymbol();
             cell.setAttribute("symbol", userSymbol);
             cell.textContent = userSymbol;
-        } else console.error("Move not allowed!");
+        } else console.error("Move not allowed!"); // here I should add a div to say that move is illegal;
         game.checkWin();
     };
 
@@ -156,36 +188,33 @@ const gameBoard = (() => {
 })();
 
 const displayController = (() => {
-
     displayWinner = function(winnerSymbol) {
         winnerDiv = document.getElementById("winner");
         winnerDiv.textContent = `Winner is : ${winnerSymbol}`;
         game.clearGameBoard();
     }
-
 })();
 
 const playerController = (() => {
-    let player = {
-        name: "",
-        symbol: "",
-        wins:0,
-        losses: 0
-    };
-
-    createPlayerObject = function(symbolTargetDiv) {
+    createPlayerObject = function(symbolTargetDiv, player) {
+        player1.name = setPlayerName(1);
+        player2.name = setPlayerName(2);
         let symbol = symbolTargetDiv.srcElement.getAttribute("symbol");
         let confirmBtn = document.getElementsByClassName("confirm")[0];
         confirmBtn.classList.remove("hidden");
         confirmBtn.onclick = function(event){
-            player.name = playerInput;
             player.symbol = symbol;
+            setPlayer2Symbol(symbol);
             modal.style.display = "none";
         }
     }
 
-    resetPlayer = function(){
-        playerController.player = {
+    createSecondPlayer = function(player){
+        
+    }
+
+    resetPlayer = function(player){
+        player = {
             name: "",
             symbol: "",
             wins:0,
@@ -193,16 +222,30 @@ const playerController = (() => {
         };
     }
 
-    incrementPlayerWinsAndLosses = function(symbol){
-        if(playerController.player.symbol === symbol){
-            playerController.player.wins += 1;
+    incrementPlayerWinsAndLosses = function(symbol, player){
+        if(player.symbol === symbol){
+            player.wins += 1;
         } else {
-            playerController.player.losses += 1;
+            player.losses += 1;
         }
     }
 
-    return {createPlayerObject, player, resetPlayer}
+    setPlayerName = function(playerNum){
+        let elementId = "player" + playerNum.toString() + "Name";
+        let playerInput = document.getElementById(elementId);
+        return playerInput.value;
+    }
+
+    return {createPlayerObject, resetPlayer, incrementPlayerWinsAndLosses}
 })();
+
+function Player(name, symbol, wins, losses){
+    this.name = name;
+    this.symbol = symbol;
+    this.wins = wins;
+    this.losses = losses;
+}
+
 
 gameBoard.gameBoardCreator();
 
@@ -215,21 +258,16 @@ testBtn.addEventListener("click", function(){
     game.fullReset();
 });
 
-let playerInput = "";
-
-let playerNameInput = document.getElementById("playerName");
-playerNameInput.addEventListener("keyup", function(event){
-    playerInput = event.target.value;
-});
+let player1 = new Player(null, null, 0, 0);
+let player2 = new Player(null, null, 0, 0);
 
 // create a div where an error appears if player makes a forbidden move (timeout so that error disappears on click or after 3s)
-
 
 /// MODAL Functions
 
 var modal = document.getElementById("startModal");
 var btn = document.getElementById("myBtn");
-
+modal.style.display = "block";
 btn.onclick = function() {
     modal.style.display = "block";
 }
@@ -238,23 +276,23 @@ var symbolButtons = document.querySelectorAll('[class="symbolBtn"]');
 symbolButtons.forEach(function(button){
     button.onclick = function(e){
         let playerChoiceDiv = document.getElementById("playerChoice");
+        playerChoiceDiv.classList.remove("hidden");
         playerSelection = document.getElementsByClassName("selected");
         if(playerSelection.length > 0){
             playerSelection[0].classList.remove("selected");
         }
         e.srcElement.classList.add("selected");
-        playerController.createPlayerObject(e);
-        playerChoiceDiv.textContent = "Your symbol of choice is: " + e.srcElement.getAttribute("symbol");
+        playerController.createPlayerObject(e, player1);
+        playerChoiceDiv.textContent = "Symbol of choice for Player 1 is: " + e.srcElement.getAttribute("symbol");
+        setPlayer2Symbol();
     }
 });
 
-function getWinningSymbol(Xs, Ys){
-    if(Xs == 3){
-        displayWinner("X");
-        incrementPlayerWinsAndLosses("X");
-    };
-    if(Ys == 3){
-        displayWinner("Y");
-        incrementPlayerWinsAndLosses("Y");
-    };
+function setPlayer2Symbol(symbol) {
+    if(symbol === "X"){
+        player2.symbol = "Y"
+    }
+    if(symbol === "Y"){
+        player2.symbol = "X";
+    }
 }
