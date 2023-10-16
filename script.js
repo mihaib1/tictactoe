@@ -1,18 +1,13 @@
 const resetBtn = document.getElementById("gameResetBtn");
 
 const game = (() => {
+    
     let moveNumber = 0;
     setUserSymbol = function(){
         let userSymbol = moveNumber % 2 ? "Y" : "X";
         moveNumber+=1;
         return userSymbol;
     };
-
-    fullReset = function(){ // still buggy
-        //playerController.resetPlayer();
-        clearGameBoard();
-        modal.style.display = "block";
-    }
 
     clearGameBoard = function() {
         const gameCells = document.querySelectorAll(".game-cell");
@@ -25,14 +20,17 @@ const game = (() => {
         
     };
 
-    function getWinningSymbol(Xs, Ys){          // this function needs to be moved
+    function getWinningSymbol(Xs, Ys){
+        playersArray = [player1, player2];
         if(Xs == 3){
-            displayWinner("X");
-            incrementPlayerWinsAndLosses("X");
+            playersArray.forEach(function(player){
+                incrementPlayerWinsAndLosses("X", player);
+            })
         };
         if(Ys == 3){
-            displayWinner("Y");
-            incrementPlayerWinsAndLosses("Y");
+            playersArray.forEach(function(player){
+                incrementPlayerWinsAndLosses("Y", player);
+            });
         };
     };
 
@@ -140,7 +138,7 @@ const game = (() => {
         };
     };
 
-    return {setUserSymbol, clearGameBoard, checkWin, fullReset};
+    return {setUserSymbol, clearGameBoard, checkWin};
 })();
 
 const gameBoard = (() => {
@@ -225,6 +223,7 @@ const playerController = (() => {
     incrementPlayerWinsAndLosses = function(symbol, player){
         if(player.symbol === symbol){
             player.wins += 1;
+            displayWinner(player.name);
         } else {
             player.losses += 1;
         }
@@ -253,11 +252,6 @@ resetBtn.addEventListener("click", function(){
     game.clearGameBoard();
 });
 
-testBtn = document.getElementById("test");
-testBtn.addEventListener("click", function(){
-    game.fullReset();
-});
-
 let player1 = new Player(null, null, 0, 0);
 let player2 = new Player(null, null, 0, 0);
 
@@ -266,11 +260,7 @@ let player2 = new Player(null, null, 0, 0);
 /// MODAL Functions
 
 var modal = document.getElementById("startModal");
-var btn = document.getElementById("myBtn");
 modal.style.display = "block";
-btn.onclick = function() {
-    modal.style.display = "block";
-}
 
 var symbolButtons = document.querySelectorAll('[class="symbolBtn"]');
 symbolButtons.forEach(function(button){
